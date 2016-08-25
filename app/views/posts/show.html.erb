@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @post.email %>
+</p>
+
+<%= link_to 'Edit', edit_post_path(@post) %> |
+<%= link_to 'Back', posts_path %>
+
+<%= link_to cookie_btn_post_path(@post), class: 'want_delete', method: :put, remote: true, data: {type: :json} do %>
+    삭제요청
+<% end %>
+: <span class="want_delete_count"><%= @permission_cookies %></span>
+
+<script>
+  $('.want_delete')
+      .on('ajax:send', function () {
+        $(this).addClass('loading');
+      })
+      .on('ajax:complete', function () {
+        $(this).removeClass('loading');
+      })
+      .on('ajax:error', function () {
+        alert('에러가 발생했습니다. 다시 시도해 보세요.');
+      })
+      .on('ajax:success', function (e, data, status, xhr) {
+        alert(data.cookies_status);
+        $(this).parent().find("span.want_delete_count").html(data.want_delete_count);
+      });
+</script>

@@ -1,0 +1,68 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Posts</h1>
+
+<!--교제 example-->
+<!--<p>cookies test</p>-->
+<%#= form_tag(action: :cookie_rec) do %>
+<!--<label>메일주소:-->
+<%#= text_field_tag :email, @email, size: 50 %>
+<!--</label>-->
+<%#= submit_tag '저장' %>
+<%# end %>
+
+<!--button 형식-->
+<div>
+  <h3 class="want_delete_box">
+  </h3>
+</div>
+
+
+<table>
+  <thead>
+  <tr>
+    <th>Email</th>
+    <th colspan="5"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @posts.each do |post| %>
+      <tr>
+        <td><%= post.email %></td>
+        <td><%= link_to 'Show', post %></td>
+        <td><%= link_to 'Edit', edit_post_path(post) %></td>
+        <td><%= link_to 'Destroy', post, method: :delete, data: {confirm: 'Are you sure?'} %></td>
+        <td>
+          <%= link_to cookie_btn_post_path(post), class: 'want_delete', method: :put, remote: true, data: {type: :json} do %>
+              삭제요청
+          <% end %> : <span class="want_delete_count"><%= post.delete_count %></span>
+        </td>
+        <td>
+          <%= @permission_cookies %>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Post', new_post_path %>
+
+<script>
+  $('.want_delete')
+      .on('ajax:send', function () {
+        $(this).addClass('loading');
+      })
+      .on('ajax:complete', function () {
+        $(this).removeClass('loading');
+      })
+      .on('ajax:error', function () {
+        alert('에러가 발생했습니다. 다시 시도해 보세요.');
+      })
+      .on('ajax:success', function (e, data, status, xhr) {
+        alert(data.cookies_status);
+        $(this).parent().find("span.want_delete_count").html(data.want_delete_count);
+      });
+</script>
